@@ -1,0 +1,48 @@
+# Loco configuration file documentation
+
+# Application logging configuration
+logger:
+  # Enable or disable logging.
+  enable: true
+  # Enable pretty backtrace (sets RUST_BACKTRACE=1)
+  pretty_backtrace: true
+  # Log level, options: trace, debug, info, warn or error.
+  level: debug
+  # Define the logging format. options: compact, pretty or json
+  format: compact
+  # By default the logger has filtering only logs that came from your code or logs that came from `loco` framework. to see all third party libraries
+  # Uncomment the line below to override to see all third party libraries you can enable this config and override the logger filters.
+  # override_filter: trace
+
+# Web server configuration
+server:
+  # Port on which the server will listen. the server binding is 0.0.0.0:{PORT}
+  port: 5150
+  # Binding for the server (which interface to bind to)
+  binding: localhost
+  # The UI hostname or IP address that mailers will point to.
+  host: http://localhost
+  # Out of the box middleware configuration. to disable middleware you can changed the `enable` field to `false` of comment the middleware block
+  middlewares:
+    compression:
+      enable: true
+    timeout_request:
+      enable: true
+      timeout: 3000
+    cors:
+      enable: true
+
+fallback:
+  enable: true
+
+cache:
+  cache_in_mem_max_capacity: 33554432
+  kind: "InMem"
+
+settings:
+  tm_api_base: "https://app.ticketmaster.com"
+  tm_api_key: "{{ get_env(name='TM_API_KEY') }}"
+  tm_venue_id: "{{ get_env(name='TM_VENUE_ID', default='KovZpaKoXe') }}"  # Venue ID, defaults to the fox
+  tm_page_size: 25
+  oic_cal_base_url: "https://stats.sharksice.timetoscore.com/"
+  cache_duration: 600  # 10 minutes
