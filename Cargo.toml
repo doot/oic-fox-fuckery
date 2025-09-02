@@ -1,0 +1,42 @@
+[workspace]
+
+[package]
+name = "oic-fox-fuckery"
+version = "0.1.0"
+edition = "2024"
+publish = false
+default-run = "oic-fox-fuckery-cli"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[workspace.dependencies]
+loco-rs = { version = "0.16", default-features = false }
+
+[dependencies]
+loco-rs = { workspace = true , features = ["cli", "cache_inmem"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1" }
+tokio = { version = "1.46", default-features = false, features = [
+  "rt-multi-thread",
+] }
+async-trait = { version = "0.1.88" }
+axum = { version = "0.8.4" }
+tracing = { version = "0.1.41" }
+tracing-subscriber = { version = "0.3.19", features = ["env-filter", "json"] }
+regex = { version = "1.11.1" }
+reqwest = { version = "0.12.22", features = ["json", "gzip", "brotli", "zstd", "deflate", "rustls-tls", "http2", "charset", "system-proxy"], default-features = false}
+icalendar = { version = "0.17.3", features = [ "chrono-tz", ] }
+chrono = "0.4.41"
+
+[[bin]]
+name = "oic-fox-fuckery-cli"
+path = "src/bin/main.rs"
+required-features = []
+
+[dev-dependencies]
+loco-rs = { workspace = true, features = ["testing"] }
+serial_test = { version = "3.2.0" }
+rstest = { version = "0.26.1" }
+insta = { version = "1.43", features = ["redactions", "yaml", "filters"] }
+mockito = "1.7"
+pretty_assertions = "1.4.1"
