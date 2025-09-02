@@ -101,4 +101,6 @@ in {
       check-yaml.enable = true;
     };
   };
+
+  devcontainer.enable = true;
 }
