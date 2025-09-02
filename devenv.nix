@@ -31,10 +31,10 @@ in {
     ];
 
   # https://devenv.sh/processes/
-  processes = {
-    watch.exec = "bacon run";
-    clippy.exec = "bacon clippy-all";
-  };
+  # processes = {
+  #   watch.exec = "bacon run";
+  #   clippy.exec = "bacon clippy-all";
+  # };
 
   containers = {
     prod = {
