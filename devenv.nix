@@ -70,7 +70,7 @@ in {
 
   git-hooks = {
     hooks = {
-      commitizen.enable = true;
+      # commitizen.enable = true;  # TODO: Temporarily disable until fix makes it downstream
       deadnix.enable = true;
       statix.enable = true;
       alejandra.enable = true;
