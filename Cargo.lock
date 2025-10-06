@@ -2126,6 +2126,7 @@ dependencies = [
  "async-trait",
  "axum",
  "chrono",
+ "chrono-tz 0.10.4",
  "icalendar",
  "insta",
  "loco-rs",

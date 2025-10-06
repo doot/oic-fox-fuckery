@@ -27,6 +27,7 @@ regex = { version = "1.11.1" }
 reqwest = { version = "0.12.22", features = ["json", "gzip", "brotli", "zstd", "deflate", "rustls-tls", "http2", "charset", "system-proxy"], default-features = false}
 icalendar = { version = "0.17.3", features = [ "chrono-tz", ] }
 chrono = "0.4.41"
+chrono-tz = "0.10.4"
 
 [[bin]]
 name = "oic-fox-fuckery-cli"

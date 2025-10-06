@@ -209,7 +209,7 @@ DTEND:20250730T053000Z
 DTSTAMP:20250713T080124Z
 DTSTART:20250730T041500Z
 LOCATION:Olympic
-SUMMARY:[Leave Early - Fox show at 2025-07-29 19:00:00 -07:00 (Dropkick Mur
+SUMMARY:[Leave Early - Fox show at 2025-07-29 19:00:00 PDT (Dropkick Mur
  phys and Bad Religion)] Olympic Silver Bullets 2  @ Sofa King Embarrassing
 UID:4851287f81cca59620e3d6723a29d698
 CATEGORIES:SIAHL

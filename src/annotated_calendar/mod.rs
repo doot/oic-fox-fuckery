@@ -1,11 +1,12 @@
 use std::{sync::Arc, time};
 
 use axum::{body::Body, http::HeaderValue};
+use chrono_tz::Tz;
 use loco_rs::{cache::Cache, prelude::*};
 
 use icalendar::{Calendar, CalendarComponent, Component, DatePerhapsTime};
 
-use chrono::{DateTime, Duration, Local, NaiveTime, Utc};
+use chrono::{DateTime, Duration, NaiveTime, Utc};
 use serde::{Deserialize, Serialize};
 use tokio::{spawn, time::Instant};
 
@@ -67,6 +68,12 @@ impl AnnotatedCalendar {
         let mut oic_calendar = oic_handle.await.unwrap();
         let tm_venue_events = tm_handle.await.unwrap();
 
+        // Get calendar timezone, or default to Pacific if not found
+        let calendar_timezone: Tz = oic_calendar
+            .get_timezone()
+            .and_then(|tz_str| tz_str.parse().ok())
+            .unwrap_or(chrono_tz::US::Pacific);
+
         // Iterate over OIC calendar entries, seeing if any games overlap with a show at the Fox.
         // If they do, annotate them.
         for component in oic_calendar.components.iter_mut() {
@@ -78,6 +85,7 @@ impl AnnotatedCalendar {
                         DatePerhapsTime::DateTime(naive_date_time) => naive_date_time.try_into_utc(),
                     })
                     .unwrap();
+
                 for VenueEventInfo {
                     lower_bound,
                     upper_bound,
@@ -85,9 +93,7 @@ impl AnnotatedCalendar {
                     artist_name,
                 } in &tm_venue_events
                 {
-                    // TODO: This needs to be hard coded to either PT or the timezone of the
-                    // calendar. It only works locally since the server is in PT
-                    let actual_start_local: DateTime<Local> = DateTime::from(*actual_start);
+                    let actual_start_local = actual_start.with_timezone(&calendar_timezone);
                     if game_start >= *lower_bound && game_start <= *upper_bound {
                         tracing::debug!(
                             "Found a match for event {} at {}",
