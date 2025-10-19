@@ -43,6 +43,6 @@ settings:
   tm_api_base: "https://app.ticketmaster.com"
   tm_api_key: "{{ get_env(name='TM_API_KEY') }}"
   tm_venue_id: "{{ get_env(name='TM_VENUE_ID', default='KovZpaKoXe') }}"  # Venue ID, defaults to the fox
-  tm_page_size: 100
+  tm_page_size: 25
   oic_cal_base_url: "https://stats.sharksice.timetoscore.com/"
   cache_duration: 7200  # 2 hours
