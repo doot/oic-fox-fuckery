@@ -73,7 +73,7 @@ in {
       exec = ''
         set -euo pipefail
 
-        echo "Building docker image and copying it to local docker daemon..."
+        echo "Building docker image and copying it to remote registry..."
 
         copyscript=$(devenv build outputs.oic-fox-fuckery-prod-push)
 
