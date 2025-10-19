@@ -22,3 +22,5 @@ jobs:
         run: devenv test
       - name: Build project and push to docker registry
         run: devenv tasks run container:registry
+        env:
+          REGISTRY_API_KEY: ${{ secrets.REGISTRY_API_KEY }}
