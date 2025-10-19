@@ -58,7 +58,7 @@ in {
         echo "Loading image into docker daemon via $copyscript..."
         $copyscript/bin/copy-to-docker-daemon
 
-        echo "Loaded container into local docker daemon: ${registry_user}/${project_name}":${tag}
+        echo "Loaded container into local docker daemon: ${registry_user}/${project_name}:${tag}"
         echo '{ "image": "${registry_user}/${project_name}:${tag}" }' > $DEVENV_TASK_OUTPUT_FILE
       '';
       execIfModified = [
