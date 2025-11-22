@@ -242,6 +242,7 @@ struct TmEventDate {
 #[derive(Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 struct TmEventDateStart {
+    #[serde(default)]
     date_time: DateTime<Utc>,
 }
 #[derive(Serialize, Deserialize, Default, Debug)]
