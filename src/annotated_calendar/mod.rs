@@ -181,13 +181,14 @@ impl AnnotatedCalendar {
 
         let mut venue_event_infos = Vec::new();
         for fe in &fox_events._embedded.events {
-            let st = fe.dates.start.date_time;
-            venue_event_infos.push(VenueEventInfo {
-                lower_bound: st - Duration::hours(3),
-                upper_bound: st + Duration::hours(3),
-                actual_start: st,
-                artist_name: fe.name.clone(),
-            });
+            if let Some(st) = fe.dates.start.date_time {
+                venue_event_infos.push(VenueEventInfo {
+                    lower_bound: st - Duration::hours(3),
+                    upper_bound: st + Duration::hours(3),
+                    actual_start: st,
+                    artist_name: fe.name.clone(),
+                });
+            };
         }
         venue_event_infos.sort_by_key(|k| k.actual_start);
         Ok(venue_event_infos)
@@ -243,7 +244,7 @@ struct TmEventDate {
 #[serde(rename_all = "camelCase")]
 struct TmEventDateStart {
     #[serde(default)]
-    date_time: DateTime<Utc>,
+    date_time: Option<DateTime<Utc>>,
 }
 #[derive(Serialize, Deserialize, Default, Debug)]
 struct VenueEventInfo {
