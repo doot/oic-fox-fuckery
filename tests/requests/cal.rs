@@ -109,6 +109,33 @@ const TEST_EVENT_DATA: &str = r#"
           },
           "timezone": "America/Los_Angeles"
         }
+      },
+      {
+        "name": "Primus - 2 DAY TICKET",
+        "type": "event",
+        "id": "G5vYZbs2pmKwN",
+        "test": false,
+        "url": "https://www.ticketmaster.com/primus-2-day-ticket-oakland-california-12-30-2025/event/1C006313D6B93CA3",
+        "locale": "en-us",
+        "dates": {
+          "start": {
+            "localDate": "2025-12-30",
+            "dateTBD": false,
+            "dateTBA": false,
+            "timeTBA": false,
+            "noSpecificTime": true
+          },
+          "end": {
+            "localDate": "2025-12-31",
+            "approximate": false,
+            "noSpecificTime": true
+          },
+          "timezone": "America/Los_Angeles",
+          "status": {
+            "code": "onsale"
+          },
+          "spanMultipleDays": false
+        }
       }
     ]
   },
