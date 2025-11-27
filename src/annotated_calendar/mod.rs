@@ -188,7 +188,7 @@ impl AnnotatedCalendar {
                     actual_start: st,
                     artist_name: fe.name.clone(),
                 });
-            };
+            }
         }
         venue_event_infos.sort_by_key(|k| k.actual_start);
         Ok(venue_event_infos)

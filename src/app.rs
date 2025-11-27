@@ -5,6 +5,7 @@ use axum::{
     Extension,
     http::{HeaderMap, HeaderValue},
 };
+use loco_openapi::prelude::*;
 use loco_rs::{
     Result,
     app::{AppContext, Hooks, Initializer},
@@ -41,8 +42,34 @@ impl Hooks for App {
         create_app::<Self>(mode, environment, config).await
     }
 
-    async fn initializers(_ctx: &AppContext) -> Result<Vec<Box<dyn Initializer>>> {
-        Ok(vec![])
+    async fn initializers(ctx: &AppContext) -> Result<Vec<Box<dyn Initializer>>> {
+        let mut initializers: Vec<Box<dyn Initializer>> = vec![];
+
+        if ctx.environment != Environment::Test {
+            initializers.push(
+                Box::new(
+                    loco_openapi::OpenapiInitializerWithSetup::new(
+                        |ctx| {
+                            #[derive(OpenApi)]
+                            #[openapi(
+                                modifiers(&SecurityAddon),
+                                info(
+                                    title = "oic-fox-fuckery",
+                                    description = "An API that provides an augmented version of an OIC beer leauge ice hockey calendar with information about any overlapping shows at The Fox Theater"
+                                )
+                            )]
+                            struct ApiDoc;
+                            set_jwt_location(ctx.into());
+
+                            ApiDoc::openapi()
+                        },
+                        None,
+                    ),
+                ) as Box<dyn Initializer>
+            );
+        }
+
+        Ok(initializers)
     }
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
