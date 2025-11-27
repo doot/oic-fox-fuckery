@@ -46,3 +46,13 @@ settings:
   tm_page_size: 25
   oic_cal_base_url: "https://stats.sharksice.timetoscore.com/"
   cache_duration: 7200  # 2 hours
+
+initializers:
+  openapi:
+    scalar:
+      url: /scalar
+    redoc:
+      url: /redoc
+    swagger:
+      url: /swagger
+      spec_json_url: /api-docs/openapi.json

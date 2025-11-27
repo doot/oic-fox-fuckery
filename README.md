@@ -7,6 +7,10 @@ at the Fox is going to fuck you over.
 
 This is a super basic app just to learn a bit of rust, I do not know what I am doing.
 
+## API
+
+For more information, see the generated [OpenAPI docs](https://oic-fox-fuckery.jhauschildt.com/swagger).
+
 ## Development Details
 
 * [devenv](https://devenv.sh)
