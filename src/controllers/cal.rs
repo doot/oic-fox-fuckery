@@ -42,7 +42,7 @@ pub fn routes() -> Routes {
             status = 200,
             description = "Annotated Calendar success",
             body = String,
-            content_type = "text/Calendar",
+            content_type = "text/calendar",
             examples(
                 ("John" = (summary = "team_id=4907, season=69"))
              )
