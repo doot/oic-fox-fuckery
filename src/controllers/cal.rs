@@ -44,7 +44,7 @@ pub fn routes() -> Routes {
             body = String,
             content_type = "text/calendar",
             examples(
-                ("John" = (summary = "team_id=4907, season=69"))
+                ("Example" = (summary = "team_id=4907, season=69"))
              )
 
         ),
