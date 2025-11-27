@@ -2,6 +2,7 @@
 #![allow(clippy::unnecessary_struct_initialization)]
 #![allow(clippy::unused_async)]
 
+use loco_openapi::prelude::*;
 use loco_rs::prelude::*;
 
 use axum::extract::State;
@@ -17,18 +18,38 @@ use crate::annotated_calendar::AnnotatedCalendar;
 
 use crate::common::settings::Settings;
 
-#[debug_handler]
-pub async fn index(State(_ctx): State<AppContext>) -> Result<Response> {
-    format::empty()
-}
-
 pub fn routes() -> Routes {
-    Routes::new()
-        .prefix("api/cal/")
-        .add("/", get(index))
-        .add("{team_id}/{season_id}", get(annotated_team_cal))
+    Routes::new().prefix("api/cal/").add(
+        "{team_id}/{season_id}",
+        openapi(get(annotated_team_cal), routes!(annotated_team_cal)),
+    )
 }
 
+/// Annotated Team Calendar
+///
+/// Returns a team calendar for the given {team_id} and {season_id} that has been augmented with
+/// overlapping events from the nearby Fox Theater.
+#[debug_handler]
+#[utoipa::path(
+    get,
+    path = "/api/cal/{team_id}/{season_id}",
+    params(
+        ("team_id", description = "ID of the team"),
+        ("season_id", description = "ID of the season")
+    ),
+    responses(
+        (
+            status = 200,
+            description = "Annotated Calendar success",
+            body = String,
+            content_type = "text/calendar",
+            examples(
+                ("Example" = (summary = "team_id=4907, season=69"))
+             )
+
+        ),
+    ),
+)]
 async fn annotated_team_cal(
     Path((team_id, season_id)): Path<(i64, i64)>,
     State(ctx): State<AppContext>,
