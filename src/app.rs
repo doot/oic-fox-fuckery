@@ -55,7 +55,7 @@ impl Hooks for App {
                                 modifiers(&SecurityAddon),
                                 info(
                                     title = "oic-fox-fuckery",
-                                    description = "An API that provides an augmented version of an OIC beer leauge ice hockey calendar with information about any overlapping shows at The Fox Theater"
+                                    description = "An API that provides an augmented version of an OIC beer league ice hockey calendar with information about any overlapping shows at The Fox Theater"
                                 )
                             )]
                             struct ApiDoc;
