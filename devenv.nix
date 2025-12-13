@@ -34,8 +34,17 @@ in {
     nix.enable = !config.container.isBuilding;
     rust = {
       enable = true;
-      channel = "stable";
+      channel = "nightly";
+      rustflags = "-Z threads=8";
       mold.enable = true;
+      components = [
+        "rustc"
+        "cargo"
+        "clippy"
+        "rustfmt"
+        "rust-analyzer"
+        "rustc-codegen-cranelift-preview"
+      ];
     };
   };
   # TODO: there is an unhandled error when the api key is bad...
@@ -100,6 +109,7 @@ in {
       pkgs.bacon
       pkgs.atop
       pkgs.loco
+      # pkgs.sccache
       oic-fox-fuckery
     ];
 
@@ -180,4 +190,6 @@ in {
   };
 
   devcontainer.enable = true;
+
+  # env.RUSTC_WRAPPER = "${pkgs.sccache}/bin/sccache";
 }
