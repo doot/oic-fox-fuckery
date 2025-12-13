@@ -1,3 +1,6 @@
+# This line needs to come before anything else in Cargo.toml
+cargo-features = ["codegen-backend"]
+
 [workspace]
 
 [package]
@@ -22,8 +25,8 @@ tokio = { version = "1.48", default-features = false, features = [
 async-trait = { version = "0.1.89" }
 axum = { version = "0.8.6" }
 tracing = { version = "0.1.41" }
-tracing-subscriber = { version = "0.3.20", features = ["env-filter", "json"] }
-regex = { version = "1.12.2" }
+# tracing-subscriber = { version = "0.3.20", features = ["env-filter", "json"] }
+# regex = { version = "1.12.2" }
 reqwest = { version = "0.12.24", features = ["json", "gzip", "brotli", "zstd", "deflate", "rustls-tls", "http2", "charset", "system-proxy"], default-features = false}
 icalendar = { version = "0.17.5", features = [ "chrono-tz", ] }
 chrono = "0.4.42"
@@ -39,7 +42,20 @@ required-features = []
 [dev-dependencies]
 loco-rs = { workspace = true, features = ["testing"] }
 serial_test = { version = "3.2.0" }
-rstest = { version = "0.26.1" }
-insta = { version = "1.43", features = ["redactions", "yaml", "filters"] }
+# rstest = { version = "0.26.1" }
+# insta = { version = "1.43", features = ["redactions", "yaml", "filters"] }
 mockito = "1.7"
 pretty_assertions = "1.4.1"
+
+[profile.dev]
+# Disable full debug info to speed up compile times. Re-enable if the debugger is needed.
+debug = "line-tables-only"
+# Increase optimization level for dev builds, in hope of increasing compile time in incremental builds.
+opt-level = 1
+
+codegen-backend = "cranelift"
+
+[profile.dev.package."*"]
+# Increase optimization level for dependencies in dev builds
+# This will reduce usefulness of debug info, so it may need to be disabled when more information is needed
+opt-level = 3
