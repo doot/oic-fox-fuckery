@@ -2,6 +2,7 @@
   pkgs,
   config,
   inputs,
+  lib,
   ...
 }: let
   oic-fox-fuckery = config.languages.rust.import ./. {};
@@ -102,15 +103,19 @@ in {
   };
 
   packages =
-    if config.container.isBuilding
-    then [oic-fox-fuckery]
-    else [
+    lib.optionals (!config.container.isBuilding && !config.devenv.isTesting) [
+      # Development packages to include only when not building a container or testing
       pkgs.git
       pkgs.bacon
       pkgs.atop
       pkgs.loco
+      pkgs.statix
+      pkgs.deadnix
+      pkgs.nil
       # pkgs.sccache
-      oic-fox-fuckery
+    ]
+    ++ lib.optionals config.container.isBuilding [
+      oic-fox-fuckery # Project package
     ];
 
   # https://devenv.sh/processes/
@@ -146,6 +151,7 @@ in {
     echo "Running tests"
     cargo fmt --check
     cargo clippy --all-targets --all-features
+    cargo build
     cargo test
   '';
 

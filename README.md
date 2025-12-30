@@ -1,5 +1,9 @@
 # OicFoxFuckery
 
+[![Tests](https://github.com/doot/oic-fox-fuckery/actions/workflows/main.yml/badge.svg)](https://github.com/doot/oic-fox-fuckery/actions/workflows/main.yml)
+[![Deploy](https://github.com/doot/oic-fox-fuckery/actions/workflows/deploy.yml/badge.svg)](https://github.com/doot/oic-fox-fuckery/actions/workflows/deploy.yml)
+[![Dependabot Updates](https://github.com/doot/oic-fox-fuckery/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/doot/oic-fox-fuckery/actions/workflows/dependabot/dependabot-updates)
+
 This is a very basic application that provides an API to annotate a given OIC
 beer league hockey calendar with any overlapping shows at the nearby Fox Theater.
 You can subscribe to this calendar so that you can automatically learn if a show
