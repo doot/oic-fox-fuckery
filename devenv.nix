@@ -34,7 +34,7 @@ in {
     nix.enable = !config.container.isBuilding;
     rust = {
       enable = true;
-      channel = "nightly";
+      toolchainFile = ./rust-toolchain.toml;
       rustflags = "-Z threads=8";
       mold.enable = true;
       components = [
