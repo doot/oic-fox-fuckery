@@ -163,7 +163,7 @@ in {
 
   git-hooks = {
     hooks = {
-      # commitizen.enable = true;  # TODO: Temporarily disable until fix makes it downstream
+      commitizen.enable = true;
       deadnix.enable = true;
       statix.enable = true;
       alejandra.enable = true;
