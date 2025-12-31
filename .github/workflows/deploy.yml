@@ -5,7 +5,8 @@ permissions: read-all
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ main ]
+
   workflow_dispatch:
 
 env:
@@ -33,6 +34,34 @@ jobs:
       - uses: actions/checkout@v5
 
       - uses: cachix/install-nix-action@v31
+
+      - name: Restore and save Nix store
+        uses: nix-community/cache-nix-action@69bb33a85010f6093f94a43682182f5455b2c18d  # TODO: Switch to a numbered version after next release
+        with:
+          # restore and save a cache using this key
+          primary-key: deploy-nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/devenv.lock') }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          # if there's no cache hit, restore a cache by this prefix
+          restore-prefixes-first-match: deploy-nix-${{ runner.os }}-
+          # collect garbage until the Nix store size (in bytes) is at most this number
+          # before trying to save a new cache
+          gc-max-store-size-linux: 3G
+          # do purge caches
+          purge: true
+          # purge all versions of the cache
+          purge-prefixes: deploy-nix-${{ runner.os }}-
+          # created more than this number of seconds ago
+          purge-created: 0
+          # or, last accessed more than this number of seconds ago
+          # relative to the start of the `Post Restore and save Nix store` phase
+          purge-last-accessed: 0
+          # except any version with the key that is the same as the `primary-key`
+          purge-primary-key: never
+          # include cargo paths in the cache
+          paths: |
+            ~/.cargo/bin
+            ~/.cargo/git/db
+            ~/.cargo/registry
+            target/
 
       - uses: cachix/cachix-action@v16
         with:

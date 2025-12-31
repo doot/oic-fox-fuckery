@@ -7,7 +7,7 @@ on:
   pull_request:
 
   push: # May be needed to fill GHA cache in a way that PRs can use it
-    branches: [ $default-branch ]
+    branches: [ main ]
 
   workflow_dispatch:
 
