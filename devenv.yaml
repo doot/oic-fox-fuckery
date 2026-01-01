@@ -6,8 +6,15 @@ inputs:
         follows: nixpkgs
   mk-shell-bin:
     url: github:rrbutani/nix-mk-shell-bin
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
   nix2container:
-    url: github:nlewo/nix2container
+    # url: github:nlewo/nix2container
+    url: github:cameronraysmith/nix2container/185-skopeo-fix
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
   rust-overlay:
