@@ -50,7 +50,7 @@ jobs:
           restore-prefixes-first-match: nix-${{ runner.os }}-
           # collect garbage until the Nix store size (in bytes) is at most this number
           # before trying to save a new cache
-          gc-max-store-size-linux: 3G
+          gc-max-store-size-linux: 5G
           # do purge caches
           purge: true
           # purge all versions of the cache
@@ -76,8 +76,14 @@ jobs:
       - name: Install devenv.sh
         run: nix profile install nixpkgs#devenv
 
-      - name: Build the devenv shell and run any pre-commit hooks
-        run: devenv test
+      - name: Build the devenv shell and run tests
+        run: |
+          devenv test
 
       - name: Run devenv build
         run: devenv build
+
+      - name: Build local container, verify container loads into docker
+        run: |
+          devenv tasks run container:local
+          docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null

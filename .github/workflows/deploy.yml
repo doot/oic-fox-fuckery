@@ -39,16 +39,16 @@ jobs:
         uses: nix-community/cache-nix-action@69bb33a85010f6093f94a43682182f5455b2c18d  # TODO: Switch to a numbered version after next release
         with:
           # restore and save a cache using this key
-          primary-key: deploy-nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/devenv.lock') }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/devenv.lock') }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           # if there's no cache hit, restore a cache by this prefix
-          restore-prefixes-first-match: deploy-nix-${{ runner.os }}-
+          restore-prefixes-first-match: nix-${{ runner.os }}-
           # collect garbage until the Nix store size (in bytes) is at most this number
           # before trying to save a new cache
-          gc-max-store-size-linux: 3G
+          gc-max-store-size-linux: 5G
           # do purge caches
           purge: true
           # purge all versions of the cache
-          purge-prefixes: deploy-nix-${{ runner.os }}-
+          purge-prefixes: nix-${{ runner.os }}-
           # created more than this number of seconds ago
           purge-created: 0
           # or, last accessed more than this number of seconds ago
