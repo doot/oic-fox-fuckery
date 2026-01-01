@@ -29,7 +29,7 @@
 in {
   name = project_name;
 
-  cachix.pull = ["pre-commit-hooks"];
+  cachix.pull = ["pre-commit-hooks" "git-hooks" "rust-cache" "cargo2nix"];
 
   languages = {
     nix.enable = !config.container.isBuilding;
@@ -150,8 +150,8 @@ in {
   enterTest = ''
     echo "Running tests"
     cargo fmt --check
-    cargo clippy --all-targets --all-features
     cargo build
+    cargo clippy --all-targets --all-features
     cargo test
   '';
 
