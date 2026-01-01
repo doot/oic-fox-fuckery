@@ -178,10 +178,10 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1767111144,
+        "lastModified": 1767187523,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "4dece0eb98c5ad9e1bda60711228228a023e1652",
+        "rev": "db10682ecb5e891e2910f1ffe27c3c22e6442669",
         "type": "github"
       },
       "original": {
@@ -715,17 +715,20 @@
     },
     "nix2container": {
       "inputs": {
-        "nixpkgs": "nixpkgs_6"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1767173987,
-        "owner": "nlewo",
+        "lastModified": 1766000582,
+        "owner": "cameronraysmith",
         "repo": "nix2container",
-        "rev": "1271f0b785a74d44a01a81d32eece568e0a1296d",
+        "rev": "6c5365c945af381435c77de7104ccf4f10b101e5",
         "type": "github"
       },
       "original": {
-        "owner": "nlewo",
+        "owner": "cameronraysmith",
+        "ref": "185-skopeo-fix",
         "repo": "nix2container",
         "type": "github"
       }
@@ -777,10 +780,10 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1767026758,
+        "lastModified": 1767151656,
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "346dd96ad74dc4457a9db9de4f4f57dab2e5731d",
+        "rev": "f665af0cdb70ed27e1bd8f9fdfecaf451260fc55",
         "type": "github"
       },
       "original": {
@@ -790,10 +793,10 @@
     },
     "nixpkgs_5": {
       "locked": {
-        "lastModified": 1767026758,
+        "lastModified": 1767151656,
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "346dd96ad74dc4457a9db9de4f4f57dab2e5731d",
+        "rev": "f665af0cdb70ed27e1bd8f9fdfecaf451260fc55",
         "type": "github"
       },
       "original": {
@@ -802,20 +805,6 @@
       }
     },
     "nixpkgs_6": {
-      "locked": {
-        "lastModified": 1767172088,
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "89d8ba87bab00cdefda8adb42a71e9229a6412fe",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_7": {
       "locked": {
         "lastModified": 1767052823,
         "owner": "cachix",
@@ -918,7 +907,7 @@
         "git-hooks": "git-hooks_4",
         "mk-shell-bin": "mk-shell-bin",
         "nix2container": "nix2container",
-        "nixpkgs": "nixpkgs_7",
+        "nixpkgs": "nixpkgs_6",
         "pre-commit-hooks": [
           "git-hooks"
         ],
