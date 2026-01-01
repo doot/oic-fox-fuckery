@@ -86,4 +86,4 @@ jobs:
       - name: Build local container, verify container loads into docker
         run: |
           devenv tasks run container:local
-          docker image inspect doot/oic-fox-fuckery:latest | jq '.[].RepoTags.[] == "doot/oic-fox-fuckery:latesttt"' | grep "true"
+          docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null
