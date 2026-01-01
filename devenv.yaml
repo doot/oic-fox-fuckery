@@ -7,7 +7,12 @@ inputs:
   mk-shell-bin:
     url: github:rrbutani/nix-mk-shell-bin
   nix2container:
-    url: github:nlewo/nix2container
+    # url: github:nlewo/nix2container
+    # TODO: revert after https://github.com/nlewo/nix2container/issues/185 is resolved...
+    url: github:cameronraysmith/nix2container/185-skopeo-fix
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
   nixpkgs:
     url: github:cachix/devenv-nixpkgs/rolling
   rust-overlay:
