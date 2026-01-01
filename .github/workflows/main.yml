@@ -1,5 +1,5 @@
 ---
-name: Test and Build
+name: Test
 
 permissions: read-all
 
@@ -76,11 +76,11 @@ jobs:
       - name: Install devenv.sh
         run: nix profile install nixpkgs#devenv
 
-      - name: Build the devenv shell and run tests
+      - name: devenv test
         run: |
           devenv test
 
-      - name: Run devenv build
+      - name: devenv build
         run: devenv build
 
       - name: Build local container, verify container loads into docker
