@@ -95,12 +95,6 @@ jobs:
       - name: Display nix store space (after devenv build)
         run: du -hs /nix/*
 
-      - name: nix store optimise
-        run: nix store optimise
-
-      - name: Display nix store space (after optimize)
-        run: du -hs /nix/*
-
       # TODO: Maybe try running commands in container:local directly, rather than indirectly?
       - name: Build local container, verify container loads into docker
         run: |
@@ -109,10 +103,4 @@ jobs:
           # docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null
 
       - name: Display nix store space (after container build)
-        run: du -hs /nix/*
-
-      - name: nix store optimise
-        run: nix store optimise
-
-      - name: Display nix store space (after optimize)
         run: du -hs /nix/*
