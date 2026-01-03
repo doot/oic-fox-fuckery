@@ -53,7 +53,7 @@ jobs:
           restore-prefixes-first-match: nix-${{ runner.os }}-
           # collect garbage until the Nix store size (in bytes) is at most this number
           # before trying to save a new cache
-          gc-max-store-size-linux: 1G
+          gc-max-store-size-linux: 8G
           # do purge caches
           purge: true
           # purge all versions of the cache
@@ -111,4 +111,10 @@ jobs:
           # docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null
 
       - name: Display nix store space (after container build)
+        run: du -hs /nix/*
+
+      - name: nix store optimise
+        run: nix store optimise
+
+      - name: Display nix store space (after optimize)
         run: du -hs /nix/*
