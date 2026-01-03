@@ -72,7 +72,7 @@ jobs:
             ~/.cargo/git/db
             ~/.cargo/registry
             target/
-            ~/.cache/nix
+            ~/.cache
 
       - name: Display nix store space (after cache restore)
         run: du -hs /nix/*
