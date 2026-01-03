@@ -135,7 +135,7 @@ in {
 
   # Hacky way to avoid putting CLI in 'packages' and delay building the CLI until needed
   scripts."${project_name}-cli".exec = ''
-    $(devenv build -q outputs.oic_fox_fuckery_cli)/bin/${project_name}-cli
+    $(devenv build -q outputs.oic_fox_fuckery_cli)/bin/${project_name}-cli "$@"
   '';
 
   enterTest = ''
