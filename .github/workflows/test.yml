@@ -83,7 +83,8 @@ jobs:
       - name: devenv build
         run: devenv build
 
+      # TODO: Remove verbaose before merging
       - name: Build local container, verify container loads into docker
         run: |
-          devenv tasks run container:local
+          devenv tasks run container:local --verbose
           docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null
