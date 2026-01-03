@@ -53,7 +53,12 @@ jobs:
           restore-prefixes-first-match: nix-${{ runner.os }}-
           # collect garbage until the Nix store size (in bytes) is at most this number
           # before trying to save a new cache
-          # gc-max-store-size-linux: 8G
+          # NOTE: It is important that GC not run for caching to work. Devenv output GC roots are never saved, so they are
+          # never cached if GC runs. This is where the build spends most of its time, ~40 min, due to cargo2nix needing to
+          # build all dependency derivations from scratch.
+          # Also note that even though the store is 10-15GB, only about 4GB of cache space is used due to compression.
+          # It should either be commented out or set to a very high value (larger than the actual cache size).
+          gc-max-store-size: 25G
           # do purge caches
           purge: true
           # purge all versions of the cache
@@ -95,12 +100,10 @@ jobs:
       - name: Display nix store space (after devenv build)
         run: du -hs /nix/*
 
-      # TODO: Maybe try running commands in container:local directly, rather than indirectly?
       - name: Build local container, verify container loads into docker
         run: |
-          devenv build outputs.oic-fox-fuckery-prod-local --verbose
-          # devenv tasks run container:local
-          # docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null
+          devenv tasks run container:local
+          docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null
 
       - name: Display nix store space (after container build)
         run: du -hs /nix/*
