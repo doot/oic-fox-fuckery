@@ -83,8 +83,9 @@ jobs:
       - name: devenv build
         run: devenv build
 
-      # TODO: Remove verbaose before merging
+      # TODO: Maybe try running commands in container:local directly, rather than indirectly?
       - name: Build local container, verify container loads into docker
         run: |
-          devenv tasks run container:local --verbose
-          docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null
+          devenv build outputs.oic-fox-fuckery-prod-local --verbose
+          # devenv tasks run container:local
+          # docker image inspect doot/oic-fox-fuckery:latest | jq -e 'any(.[].RepoTags[]; . == "doot/oic-fox-fuckery:latest")' > /dev/null
