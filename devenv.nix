@@ -48,18 +48,22 @@ in {
       toolchainFile = ./rust-toolchain.toml;
       rustflags = "-Z threads=8";
       mold.enable = true;
-      # TODO: Is this needed when defined in rust-toolchain.toml?
-      # components = [
-      #   "rustc"
-      #   "cargo"
-      #   "clippy"
-      #   "rustfmt"
-      #   "rust-analyzer"
-      #   "rustc-codegen-cranelift-preview"
-      # ];
     };
   };
-  # TODO: there is an unhandled error when the api key is bad...
+
+  packages =
+    lib.optionals (!config.container.isBuilding && !config.devenv.isTesting) [
+      # Development packages to include only when not building a container or testing
+      pkgs.bacon
+      pkgs.atop
+      pkgs.loco
+      pkgs.statix
+      pkgs.deadnix
+      pkgs.nil
+    ]
+    ++ lib.optionals config.container.isBuilding [
+      oic_fox_fuckery_cli # Project package
+    ];
 
   tasks = {
     "container:local" = {
@@ -101,27 +105,13 @@ in {
       '';
       execIfModified = [
         "src/**/*.rs"
-        "config/**/*.yaml"
         "*.toml"
+        "config/**/*.yaml"
         "devenv.nix"
         "*.lock"
       ];
     };
   };
-
-  packages =
-    lib.optionals (!config.container.isBuilding && !config.devenv.isTesting) [
-      # Development packages to include only when not building a container or testing
-      pkgs.bacon
-      pkgs.atop
-      pkgs.loco
-      pkgs.statix
-      pkgs.deadnix
-      pkgs.nil
-    ]
-    ++ lib.optionals config.container.isBuilding [
-      oic_fox_fuckery_cli # Project package
-    ];
 
   containers = {
     # TODO: This container still includes the entire dev environment, making it 3-4 GB. It should not be used until there is a way to only include the rust
