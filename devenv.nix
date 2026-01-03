@@ -97,10 +97,10 @@ in {
 
         copyscript=$(devenv build outputs.prod_image_copy_registry)
 
-        echo "Loading image into docker daemon via $copyscript..."
+        echo "Pushing image to registry via $copyscript..."
         $copyscript/bin/copy-to-registry --dest-creds ${registry_user}:$REGISTRY_API_KEY
 
-        echo "Copied container into remote registry: ${registry_user}/${project_name}:${tag}"
+        echo "Pushed container into remote registry: ${registry_user}/${project_name}:${tag}"
         echo '{ "image": "${registry_user}/${project_name}:${tag}" }' > $DEVENV_TASK_OUTPUT_FILE
       '';
       execIfModified = [
