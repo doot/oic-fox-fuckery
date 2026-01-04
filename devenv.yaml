@@ -7,9 +7,7 @@ inputs:
   mk-shell-bin:
     url: github:rrbutani/nix-mk-shell-bin
   nix2container:
-    # url: github:nlewo/nix2container
-    # TODO: revert after https://github.com/nlewo/nix2container/issues/185 is resolved...
-    url: github:cameronraysmith/nix2container/185-skopeo-fix
+    url: github:nlewo/nix2container
     inputs:
       nixpkgs:
         follows: nixpkgs
