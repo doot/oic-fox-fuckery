@@ -1,5 +1,5 @@
 ---
-name: "Build, Test, and Deploy"
+name: Deploy (build, test, push container)
 
 permissions: read-all
 
@@ -18,6 +18,9 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    permissions:
+      # Needed for cache action to work
+      actions: write
     steps:
       - name: Display disk space (before)
         run: df -h
@@ -35,6 +38,9 @@ jobs:
 
       - uses: cachix/install-nix-action@v31
 
+      - name: Display nix store space (before cache restore)
+        run: du -hs /nix/*
+
       - name: Restore and save Nix store
         uses: nix-community/cache-nix-action@b426b118b6dc86d6952988d396aa7c6b09776d08  # TODO: Switch to a numbered version after next release
         with:
@@ -44,7 +50,12 @@ jobs:
           restore-prefixes-first-match: nix-${{ runner.os }}-
           # collect garbage until the Nix store size (in bytes) is at most this number
           # before trying to save a new cache
-          gc-max-store-size-linux: 5G
+          # NOTE: It is important that GC not run for caching to work. Devenv output GC roots are never saved, so they are
+          # never cached if GC runs. This is where the build spends most of its time, ~40 min, due to cargo2nix needing to
+          # build all dependency derivations from scratch.
+          # Also note that even though the store is 10-15GB, only about 4GB of cache space is used due to compression.
+          # It should either be commented out or set to a very high value (larger than the actual cache size).
+          gc-max-store-size: 25G
           # do purge caches
           purge: true
           # purge all versions of the cache
@@ -63,6 +74,9 @@ jobs:
             ~/.cargo/registry
             target/
 
+      - name: Display nix store space (after cache restore)
+        run: du -hs /nix/*
+
       - uses: cachix/cachix-action@v16
         with:
           name: devenv
@@ -70,10 +84,19 @@ jobs:
       - name: Install devenv.sh
         run: nix profile install nixpkgs#devenv
 
-      - name: Build the devenv shell and run any pre-commit hooks
+      - name: devenv test
         run: devenv test
 
-      - name: Build project and push to docker registry
+      - name: Display nix store space (after devenv test)
+        run: du -hs /nix/*
+
+      - name: Display nix store space (after devenv build)
+        run: du -hs /nix/*
+
+      - name: Build container and push to docker registry
         run: devenv tasks run container:registry
         env:
           REGISTRY_API_KEY: ${{ secrets.REGISTRY_API_KEY }}
+
+      - name: Display nix store space (after container build)
+        run: du -hs /nix/*
