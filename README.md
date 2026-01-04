@@ -1,6 +1,6 @@
 # OicFoxFuckery
 
-[![Tests](https://github.com/doot/oic-fox-fuckery/actions/workflows/main.yml/badge.svg)](https://github.com/doot/oic-fox-fuckery/actions/workflows/main.yml)
+[![Tests](https://github.com/doot/oic-fox-fuckery/actions/workflows/test.yml/badge.svg)](https://github.com/doot/oic-fox-fuckery/actions/workflows/test.yml)
 [![Deploy](https://github.com/doot/oic-fox-fuckery/actions/workflows/deploy.yml/badge.svg)](https://github.com/doot/oic-fox-fuckery/actions/workflows/deploy.yml)
 [![Dependabot Updates](https://github.com/doot/oic-fox-fuckery/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/doot/oic-fox-fuckery/actions/workflows/dependabot/dependabot-updates)
 
