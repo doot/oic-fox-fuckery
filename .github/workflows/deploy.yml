@@ -42,7 +42,7 @@ jobs:
         run: du -hs /nix/*
 
       - name: Restore and save Nix store
-        uses: nix-community/cache-nix-action@106bba72ed8e29c8357661199511ef07790175e9  # TODO: Switch to a numbered version after next release
+        uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569  # TODO: Switch to a numbered version after next release
         with:
           # restore and save a cache using this key
           primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/devenv.lock') }}-cargo-${{ hashFiles('**/Cargo.lock') }}
