@@ -43,8 +43,10 @@ in {
 
   languages = {
     nix.enable = !config.container.isBuilding && !config.devenv.isTesting;
+    nix.lsp.enable = true;
     rust = {
       enable = true;
+      lsp.enable = true;
       toolchainFile = ./rust-toolchain.toml;
       rustflags = "-Z threads=8";
       mold.enable = true;
