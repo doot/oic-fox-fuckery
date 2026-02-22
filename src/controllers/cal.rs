@@ -67,6 +67,6 @@ async fn annotated_team_cal(
         ctx.cache.clone(),
         settings,
     )
-    .await
+    .await?
     .as_ical_response()
 }

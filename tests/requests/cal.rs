@@ -613,6 +613,88 @@ async fn response_has_correct_headers() {
     .await;
 }
 
+/// TM API returns 500 — service should return an error, not panic.
+#[tokio::test]
+#[serial]
+async fn tm_api_returns_500() {
+    request::<App, _, _>(|request, _ctx| async move {
+        let mut server = mock_server().lock().unwrap();
+
+        server
+            .mock(
+                "GET",
+                "/discovery/v2/events.json?venueId=abc&size=15&sort=date,asc&apikey=test_key",
+            )
+            .with_status(500)
+            .with_body("Internal Server Error")
+            .create();
+        server
+            .mock("GET", "/team-cal.php?team=123&tlev=0&tseq=0&season=456&format=iCal")
+            .with_body(TEST_CAL_DATA)
+            .create();
+
+        drop(server);
+        let resp = request.get("/api/cal/123/456").await;
+
+        assert_eq!(resp.status_code(), 500, "TM failure should result in 500, not panic");
+    })
+    .await;
+}
+
+/// OIC returns garbage non-iCal data — service should return an error, not panic.
+#[tokio::test]
+#[serial]
+async fn oic_returns_garbage() {
+    request::<App, _, _>(|request, _ctx| async move {
+        let mut server = mock_server().lock().unwrap();
+
+        server
+            .mock(
+                "GET",
+                "/discovery/v2/events.json?venueId=abc&size=15&sort=date,asc&apikey=test_key",
+            )
+            .with_body(TEST_EVENT_DATA)
+            .create();
+        server
+            .mock("GET", "/team-cal.php?team=123&tlev=0&tseq=0&season=456&format=iCal")
+            .with_body("<html>404 Not Found</html>")
+            .create();
+
+        drop(server);
+        let resp = request.get("/api/cal/123/456").await;
+
+        assert_eq!(resp.status_code(), 500, "Garbage OIC data should result in 500, not panic");
+    })
+    .await;
+}
+
+/// TM returns malformed JSON — service should return an error, not panic.
+#[tokio::test]
+#[serial]
+async fn tm_returns_malformed_json() {
+    request::<App, _, _>(|request, _ctx| async move {
+        let mut server = mock_server().lock().unwrap();
+
+        server
+            .mock(
+                "GET",
+                "/discovery/v2/events.json?venueId=abc&size=15&sort=date,asc&apikey=test_key",
+            )
+            .with_body("{not valid json at all")
+            .create();
+        server
+            .mock("GET", "/team-cal.php?team=123&tlev=0&tseq=0&season=456&format=iCal")
+            .with_body(TEST_CAL_DATA)
+            .create();
+
+        drop(server);
+        let resp = request.get("/api/cal/123/456").await;
+
+        assert_eq!(resp.status_code(), 500, "Malformed TM JSON should result in 500, not panic");
+    })
+    .await;
+}
+
 #[tokio::test]
 #[serial]
 async fn can_get_cal() {
