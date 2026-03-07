@@ -104,7 +104,10 @@ impl Hooks for App {
 
         // Add a shared settings object that can be reused across requests
         let settings = common::settings::Settings::from_json(
-            ctx.config.settings.as_ref().ok_or_else(|| loco_rs::Error::string("missing [settings] section in config"))?,
+            ctx.config
+                .settings
+                .as_ref()
+                .ok_or_else(|| loco_rs::Error::string("missing [settings] section in config"))?,
         )?;
 
         Ok(router.layer(Extension(client)).layer(Extension(settings)))

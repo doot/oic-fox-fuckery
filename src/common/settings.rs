@@ -9,6 +9,12 @@ pub struct Settings {
     pub tm_page_size: u64,
     pub oic_cal_base_url: String,
     pub cache_duration: u64,
+    #[serde(default = "default_overlap_window_hours")]
+    pub overlap_window_hours: i64,
+}
+
+fn default_overlap_window_hours() -> i64 {
+    3
 }
 
 impl Settings {

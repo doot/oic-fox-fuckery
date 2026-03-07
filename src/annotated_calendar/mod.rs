@@ -65,10 +65,12 @@ impl AnnotatedCalendar {
         });
 
         // Block until both responses finish
-        let mut oic_calendar =
-            oic_handle.await.map_err(|e| Error::wrap(loco_rs::Error::string(&e.to_string())))??;
-        let tm_venue_events =
-            tm_handle.await.map_err(|e| Error::wrap(loco_rs::Error::string(&e.to_string())))??;
+        let mut oic_calendar = oic_handle
+            .await
+            .map_err(|e| Error::wrap(loco_rs::Error::string(&e.to_string())))??;
+        let tm_venue_events = tm_handle
+            .await
+            .map_err(|e| Error::wrap(loco_rs::Error::string(&e.to_string())))??;
 
         // Get calendar timezone, or default to Pacific if not found
         let calendar_timezone: Tz = oic_calendar
@@ -80,12 +82,10 @@ impl AnnotatedCalendar {
         // If they do, annotate them.
         for component in oic_calendar.components.iter_mut() {
             if let CalendarComponent::Event(game) = component {
-                let game_start = game
-                    .get_start()
-                    .and_then(|date_perhaps_time| match date_perhaps_time {
-                        DatePerhapsTime::Date(date) => Some(date.and_time(NaiveTime::MIN).and_utc()),
-                        DatePerhapsTime::DateTime(naive_date_time) => naive_date_time.try_into_utc(),
-                    });
+                let game_start = game.get_start().and_then(|date_perhaps_time| match date_perhaps_time {
+                    DatePerhapsTime::Date(date) => Some(date.and_time(NaiveTime::MIN).and_utc()),
+                    DatePerhapsTime::DateTime(naive_date_time) => naive_date_time.try_into_utc(),
+                });
 
                 let Some(game_start) = game_start else {
                     continue;
@@ -164,6 +164,7 @@ impl AnnotatedCalendar {
             tm_api_base,
             tm_api_key,
             tm_page_size,
+            overlap_window_hours,
             ..
         }: Settings,
     ) -> Result<Vec<VenueEventInfo>> {
@@ -177,8 +178,8 @@ impl AnnotatedCalendar {
         for fe in &fox_events._embedded.events {
             if let Some(st) = fe.dates.start.date_time {
                 venue_event_infos.push(VenueEventInfo {
-                    lower_bound: st - Duration::hours(3),
-                    upper_bound: st + Duration::hours(3),
+                    lower_bound: st - Duration::hours(overlap_window_hours),
+                    upper_bound: st + Duration::hours(overlap_window_hours),
                     actual_start: st,
                     artist_name: fe.name.clone(),
                 });

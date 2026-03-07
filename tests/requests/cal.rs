@@ -663,7 +663,11 @@ async fn oic_returns_garbage() {
         drop(server);
         let resp = request.get("/api/cal/123/456").await;
 
-        assert_eq!(resp.status_code(), 500, "Garbage OIC data should result in 500, not panic");
+        assert_eq!(
+            resp.status_code(),
+            500,
+            "Garbage OIC data should result in 500, not panic"
+        );
     })
     .await;
 }
@@ -690,7 +694,11 @@ async fn tm_returns_malformed_json() {
         drop(server);
         let resp = request.get("/api/cal/123/456").await;
 
-        assert_eq!(resp.status_code(), 500, "Malformed TM JSON should result in 500, not panic");
+        assert_eq!(
+            resp.status_code(),
+            500,
+            "Malformed TM JSON should result in 500, not panic"
+        );
     })
     .await;
 }
