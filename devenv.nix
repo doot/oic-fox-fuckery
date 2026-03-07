@@ -141,6 +141,7 @@ in {
   '';
 
   enterTest = ''
+    rustc --version
     echo "Running tests"
     cargo fmt --check
     cargo build
