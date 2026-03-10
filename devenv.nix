@@ -74,7 +74,7 @@ in {
 
         echo "Building docker image and copying it to local docker daemon..."
 
-        copyscript=$(devenv build outputs.prod_image_copy_local)
+        copyscript=$(devenv build outputs.prod_image_copy_local | jq '.["outputs.prod_image_copy_local"])
 
         echo "Loading image into docker daemon via $copyscript..."
         $copyscript/bin/copy-to-docker-daemon
@@ -97,7 +97,7 @@ in {
 
         echo "Building docker image and copying it to remote registry..."
 
-        copyscript=$(devenv build outputs.prod_image_copy_registry)
+        copyscript=$(devenv build outputs.prod_image_copy_registry | jq '.["outputs.prod_image_copy_registry"]')
 
         echo "Pushing image to registry via $copyscript..."
         $copyscript/bin/copy-to-registry --dest-creds ${registry_user}:$REGISTRY_API_KEY
