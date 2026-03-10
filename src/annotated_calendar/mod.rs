@@ -65,12 +65,8 @@ impl AnnotatedCalendar {
         });
 
         // Block until both responses finish
-        let mut oic_calendar = oic_handle
-            .await
-            .map_err(|e| Error::wrap(loco_rs::Error::string(&e.to_string())))??;
-        let tm_venue_events = tm_handle
-            .await
-            .map_err(|e| Error::wrap(loco_rs::Error::string(&e.to_string())))??;
+        let mut oic_calendar = oic_handle.await.map_err(Error::wrap)??;
+        let tm_venue_events = tm_handle.await.map_err(Error::wrap)??;
 
         // Get calendar timezone, or default to Pacific if not found
         let calendar_timezone: Tz = oic_calendar
