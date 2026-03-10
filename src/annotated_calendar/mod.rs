@@ -28,7 +28,7 @@ impl AnnotatedCalendar {
         client: Client,
         cache: Arc<Cache>,
         settings: Settings,
-    ) -> Self {
+    ) -> Result<Self> {
         let oic_key = format!("oic:{team_id}:{season_id}");
         let tm_venue_id = settings.tm_venue_id.to_string();
         let tm_cache_key = format!("tm:{tm_venue_id}");
@@ -65,8 +65,8 @@ impl AnnotatedCalendar {
         });
 
         // Block until both responses finish
-        let mut oic_calendar = oic_handle.await.unwrap();
-        let tm_venue_events = tm_handle.await.unwrap();
+        let mut oic_calendar = oic_handle.await.map_err(Error::wrap)??;
+        let tm_venue_events = tm_handle.await.map_err(Error::wrap)??;
 
         // Get calendar timezone, or default to Pacific if not found
         let calendar_timezone: Tz = oic_calendar
@@ -78,13 +78,14 @@ impl AnnotatedCalendar {
         // If they do, annotate them.
         for component in oic_calendar.components.iter_mut() {
             if let CalendarComponent::Event(game) = component {
-                let game_start = game
-                    .get_start()
-                    .and_then(|date_perhaps_time| match date_perhaps_time {
-                        DatePerhapsTime::Date(date) => Some(date.and_time(NaiveTime::MIN).and_utc()),
-                        DatePerhapsTime::DateTime(naive_date_time) => naive_date_time.try_into_utc(),
-                    })
-                    .unwrap();
+                let game_start = game.get_start().and_then(|date_perhaps_time| match date_perhaps_time {
+                    DatePerhapsTime::Date(date) => Some(date.and_time(NaiveTime::MIN).and_utc()),
+                    DatePerhapsTime::DateTime(naive_date_time) => naive_date_time.try_into_utc(),
+                });
+
+                let Some(game_start) = game_start else {
+                    continue;
+                };
 
                 for VenueEventInfo {
                     lower_bound,
@@ -95,25 +96,17 @@ impl AnnotatedCalendar {
                 {
                     let actual_start_local = actual_start.with_timezone(&calendar_timezone);
                     if game_start >= *lower_bound && game_start <= *upper_bound {
-                        tracing::debug!(
-                            "Found a match for event {} at {}",
-                            game.get_summary().unwrap(),
-                            game_start
-                        );
-                        game.summary(
-                            format!(
-                                "[Leave Early - Fox show at {} ({})] {}",
-                                actual_start_local,
-                                artist_name,
-                                game.get_summary().unwrap()
-                            )
-                            .as_str(),
-                        );
+                        let summary = game.get_summary().unwrap_or_default();
+                        tracing::debug!("Found a match for event {summary} at {game_start}");
+                        game.summary(&format!(
+                            "[Leave Early - Fox show at {} ({})] {}",
+                            actual_start_local, artist_name, summary
+                        ));
                     }
                 }
             }
         }
-        Self { calendar: oic_calendar }
+        Ok(Self { calendar: oic_calendar })
     }
 
     /// Return an ical response from an instantiated AnnotatedCalendar
@@ -122,7 +115,7 @@ impl AnnotatedCalendar {
             .response()
             .header(
                 header::CONTENT_TYPE,
-                HeaderValue::from_static("text/Calendar; charset=utf-8"),
+                HeaderValue::from_static("text/calendar; charset=utf-8"),
             )
             .header(
                 header::CONTENT_DISPOSITION,
@@ -144,9 +137,9 @@ impl AnnotatedCalendar {
             cache_duration,
             ..
         }: Settings,
-    ) -> Calendar {
+    ) -> Result<Calendar> {
         let url = format!("{oic_cal_base_url}/team-cal.php?team={team_id}&tlev=0&tseq=0&season={season}&format=iCal");
-        let parsed_calendar: Calendar = cache
+        let raw_cal = cache
             .get_or_insert_with_expiry::<String, _>(
                 oic_key.as_str(),
                 time::Duration::from_secs(cache_duration),
@@ -155,11 +148,8 @@ impl AnnotatedCalendar {
                     client.get_oic(&url).await
                 },
             )
-            .await
-            .unwrap()
-            .parse()
-            .unwrap();
-        parsed_calendar
+            .await?;
+        raw_cal.parse().map_err(|e: String| Error::string(&e))
     }
 
     /// Get events from TicketMaster API
@@ -170,6 +160,7 @@ impl AnnotatedCalendar {
             tm_api_base,
             tm_api_key,
             tm_page_size,
+            overlap_window_hours,
             ..
         }: Settings,
     ) -> Result<Vec<VenueEventInfo>> {
@@ -183,8 +174,8 @@ impl AnnotatedCalendar {
         for fe in &fox_events._embedded.events {
             if let Some(st) = fe.dates.start.date_time {
                 venue_event_infos.push(VenueEventInfo {
-                    lower_bound: st - Duration::hours(3),
-                    upper_bound: st + Duration::hours(3),
+                    lower_bound: st - Duration::hours(overlap_window_hours as i64),
+                    upper_bound: st + Duration::hours(overlap_window_hours as i64),
                     actual_start: st,
                     artist_name: fe.name.clone(),
                 });
@@ -202,7 +193,7 @@ impl AnnotatedCalendar {
         venue_id: String,
         tm_cache_key: String,
         settings: Settings,
-    ) -> Vec<VenueEventInfo> {
+    ) -> Result<Vec<VenueEventInfo>> {
         cache
             .get_or_insert_with_expiry::<Vec<VenueEventInfo>, _>(
                 tm_cache_key.as_str(),
@@ -213,7 +204,6 @@ impl AnnotatedCalendar {
                 },
             )
             .await
-            .unwrap()
     }
 }
 

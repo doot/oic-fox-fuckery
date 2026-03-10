@@ -53,6 +53,23 @@ in {
     };
   };
 
+  # Fucking gross...
+  claude = {
+    code = {
+      enable = true;
+      mcpServers = {
+        devenv = {
+          type = "stdio";
+          command = "devenv";
+          args = [ "mcp" ];
+          env = {
+            DEVENV_ROOT = config.devenv.root;
+          };
+        };
+      };
+    };
+  };
+
   packages =
     lib.optionals (!config.container.isBuilding && !config.devenv.isTesting) [
       # Development packages to include only when not building a container or testing
@@ -62,6 +79,7 @@ in {
       pkgs.statix
       pkgs.deadnix
       pkgs.nil
+      pkgs.jq # Needed for tasks and CLI script that use jq
     ]
     ++ lib.optionals config.container.isBuilding [
       oic_fox_fuckery_cli # Project package
@@ -74,7 +92,7 @@ in {
 
         echo "Building docker image and copying it to local docker daemon..."
 
-        copyscript=$(devenv build outputs.prod_image_copy_local)
+        copyscript=$(devenv build outputs.prod_image_copy_local | jq '.["outputs.prod_image_copy_local"]')
 
         echo "Loading image into docker daemon via $copyscript..."
         $copyscript/bin/copy-to-docker-daemon
@@ -97,7 +115,7 @@ in {
 
         echo "Building docker image and copying it to remote registry..."
 
-        copyscript=$(devenv build outputs.prod_image_copy_registry)
+        copyscript=$(devenv build outputs.prod_image_copy_registry | jq '.["outputs.prod_image_copy_registry"]')
 
         echo "Pushing image to registry via $copyscript..."
         $copyscript/bin/copy-to-registry --dest-creds ${registry_user}:$REGISTRY_API_KEY
@@ -137,10 +155,11 @@ in {
 
   # Hacky way to avoid putting CLI in 'packages' and delay building the CLI until needed
   scripts."${project_name}-cli".exec = ''
-    $(devenv build -q outputs.oic_fox_fuckery_cli)/bin/${project_name}-cli "$@"
+    "$(devenv build -q outputs.oic_fox_fuckery_cli | jq -r '.["outputs.oic_fox_fuckery_cli"]')/bin/${project_name}-cli" "$@"
   '';
 
   enterTest = ''
+    rustc --version
     echo "Running tests"
     cargo fmt --check
     cargo build
