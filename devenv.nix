@@ -65,6 +65,7 @@ in {
     ]
     ++ lib.optionals config.container.isBuilding [
       oic_fox_fuckery_cli # Project package
+      pkgs.jq # Needed for build scripts that manipulate devenv output
     ];
 
   tasks = {
@@ -137,7 +138,7 @@ in {
 
   # Hacky way to avoid putting CLI in 'packages' and delay building the CLI until needed
   scripts."${project_name}-cli".exec = ''
-    $(devenv build -q outputs.oic_fox_fuckery_cli)/bin/${project_name}-cli "$@"
+    $(devenv build -q outputs.oic_fox_fuckery_cli | jq '.["outputs.oic_fox_fuckery_cli"]')/bin/${project_name}-cli "$@"
   '';
 
   enterTest = ''
