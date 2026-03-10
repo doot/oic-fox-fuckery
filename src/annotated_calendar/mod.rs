@@ -119,7 +119,7 @@ impl AnnotatedCalendar {
             .response()
             .header(
                 header::CONTENT_TYPE,
-                HeaderValue::from_static("text/Calendar; charset=utf-8"),
+                HeaderValue::from_static("text/calendar; charset=utf-8"),
             )
             .header(
                 header::CONTENT_DISPOSITION,
@@ -178,8 +178,8 @@ impl AnnotatedCalendar {
         for fe in &fox_events._embedded.events {
             if let Some(st) = fe.dates.start.date_time {
                 venue_event_infos.push(VenueEventInfo {
-                    lower_bound: st - Duration::hours(overlap_window_hours),
-                    upper_bound: st + Duration::hours(overlap_window_hours),
+                    lower_bound: st - Duration::hours(overlap_window_hours as i64),
+                    upper_bound: st + Duration::hours(overlap_window_hours as i64),
                     actual_start: st,
                     artist_name: fe.name.clone(),
                 });

@@ -17,7 +17,7 @@ use mockito;
 
 /// Shared mockito server on port 4000. Created once, reused across all tests.
 /// The background listener thread lives for the duration of the test binary.
-/// Tests must call `reset()` via this mutex between uses (handled by `mock_server()`).
+/// Tests lock this mutex to get exclusive access; mockito cleans up mocks via `Mock` drop.
 #[cfg(test)]
 fn mock_server() -> &'static Mutex<mockito::Server> {
     static SERVER: OnceLock<Mutex<mockito::Server>> = OnceLock::new();
@@ -603,7 +603,7 @@ async fn response_has_correct_headers() {
         let resp = request.get("/api/cal/123/456").await;
 
         assert_eq!(resp.status_code(), 200);
-        assert_eq!(resp.header("content-type"), "text/Calendar; charset=utf-8");
+        assert_eq!(resp.header("content-type"), "text/calendar; charset=utf-8");
         assert_eq!(resp.header("content-disposition"), "inline; filename=cal.ics");
         tm_mock.assert();
         oic_mock.assert();
