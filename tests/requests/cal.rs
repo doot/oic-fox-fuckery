@@ -515,10 +515,6 @@ END:VCALENDAR"#;
             body.contains("SUMMARY:Game No Overlap"),
             "Expected unmodified summary for non-overlapping game"
         );
-        assert!(
-            !body.contains("[Leave Early - Fox show") || body.contains("SUMMARY:Game No Overlap"),
-            "Non-overlapping game should not be annotated"
-        );
     })
     .await;
 }
@@ -591,14 +587,14 @@ async fn response_has_correct_headers() {
     request::<App, _, _>(|request, _ctx| async move {
         let mut server = mock_server().lock().unwrap();
 
-        server
+        let tm_mock = server
             .mock(
                 "GET",
                 "/discovery/v2/events.json?venueId=abc&size=15&sort=date,asc&apikey=test_key",
             )
             .with_body(TEST_EVENT_DATA)
             .create();
-        server
+        let oic_mock = server
             .mock("GET", "/team-cal.php?team=123&tlev=0&tseq=0&season=456&format=iCal")
             .with_body(TEST_CAL_DATA)
             .create();
@@ -609,6 +605,8 @@ async fn response_has_correct_headers() {
         assert_eq!(resp.status_code(), 200);
         assert_eq!(resp.header("content-type"), "text/Calendar; charset=utf-8");
         assert_eq!(resp.header("content-disposition"), "inline; filename=cal.ics");
+        tm_mock.assert();
+        oic_mock.assert();
     })
     .await;
 }
