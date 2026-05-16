@@ -61,7 +61,7 @@ in {
         devenv = {
           type = "stdio";
           command = "devenv";
-          args = [ "mcp" ];
+          args = ["mcp"];
           env = {
             DEVENV_ROOT = config.devenv.root;
           };
@@ -80,6 +80,7 @@ in {
       pkgs.deadnix
       pkgs.nil
       pkgs.jq # Needed for tasks and CLI script that use jq
+      pkgs.lldb
     ]
     ++ lib.optionals config.container.isBuilding [
       oic_fox_fuckery_cli # Project package

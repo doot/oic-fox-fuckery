@@ -52,10 +52,23 @@ pretty_assertions = "1.4.1"
 debug = "line-tables-only"
 # Increase optimization level for dev builds, in hope of increasing compile time in incremental builds.
 opt-level = 1
-
+# Use an alternative codegen backend to speed up compile times. This currently breaks variable inspection in the debugger.
 codegen-backend = "cranelift"
 
 [profile.dev.package."*"]
 # Increase optimization level for dependencies in dev builds
 # This will reduce usefulness of debug info, so it may need to be disabled when more information is needed
 opt-level = 3
+
+[profile.dev-debugger]
+# Alternative dev profile that disables dev profile compile time optimizations for use in a debugger.
+inherits = "dev"
+debug = true
+opt-level = 0
+codegen-backend = "llvm"
+
+[profile.dev-debugger.package."*"]
+# Alternative dev profile for dependencies that disables dev profile compile time optimizations for use in a debugger.
+inherits = "dev"
+# Decrease optimization level for dependencies in dev builds to improve usefulness of debugger
+opt-level = 0
