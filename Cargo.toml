@@ -69,6 +69,5 @@ codegen-backend = "llvm"
 
 [profile.dev-debugger.package."*"]
 # Alternative dev profile for dependencies that disables dev profile compile time optimizations for use in a debugger.
-inherits = "dev"
 # Decrease optimization level for dependencies in dev builds to improve usefulness of debugger
 opt-level = 0

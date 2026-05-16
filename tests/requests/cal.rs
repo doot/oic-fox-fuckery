@@ -618,7 +618,7 @@ async fn tm_api_returns_500() {
     request::<App, _, _>(|request, _ctx| async move {
         let mut server = mock_server().lock().unwrap();
 
-        server
+        let tm_mock = server
             .mock(
                 "GET",
                 "/discovery/v2/events.json?venueId=abc&size=15&sort=date,asc&apikey=test_key",
@@ -626,7 +626,7 @@ async fn tm_api_returns_500() {
             .with_status(500)
             .with_body("Internal Server Error")
             .create();
-        server
+        let oic_mock = server
             .mock("GET", "/team-cal.php?team=123&tlev=0&tseq=0&season=456&format=iCal")
             .with_body(TEST_CAL_DATA)
             .create();
@@ -635,6 +635,8 @@ async fn tm_api_returns_500() {
         let resp = request.get("/api/cal/123/456").await;
 
         assert_eq!(resp.status_code(), 500, "TM failure should result in 500, not panic");
+        tm_mock.assert();
+        oic_mock.assert();
     })
     .await;
 }
@@ -646,14 +648,14 @@ async fn oic_returns_garbage() {
     request::<App, _, _>(|request, _ctx| async move {
         let mut server = mock_server().lock().unwrap();
 
-        server
+        let tm_mock = server
             .mock(
                 "GET",
                 "/discovery/v2/events.json?venueId=abc&size=15&sort=date,asc&apikey=test_key",
             )
             .with_body(TEST_EVENT_DATA)
             .create();
-        server
+        let oic_mock = server
             .mock("GET", "/team-cal.php?team=123&tlev=0&tseq=0&season=456&format=iCal")
             .with_body("<html>404 Not Found</html>")
             .create();
@@ -666,6 +668,8 @@ async fn oic_returns_garbage() {
             500,
             "Garbage OIC data should result in 500, not panic"
         );
+        tm_mock.assert();
+        oic_mock.assert();
     })
     .await;
 }
@@ -677,14 +681,14 @@ async fn tm_returns_malformed_json() {
     request::<App, _, _>(|request, _ctx| async move {
         let mut server = mock_server().lock().unwrap();
 
-        server
+        let tm_mock = server
             .mock(
                 "GET",
                 "/discovery/v2/events.json?venueId=abc&size=15&sort=date,asc&apikey=test_key",
             )
             .with_body("{not valid json at all")
             .create();
-        server
+        let oic_mock = server
             .mock("GET", "/team-cal.php?team=123&tlev=0&tseq=0&season=456&format=iCal")
             .with_body(TEST_CAL_DATA)
             .create();
@@ -697,6 +701,8 @@ async fn tm_returns_malformed_json() {
             500,
             "Malformed TM JSON should result in 500, not panic"
         );
+        tm_mock.assert();
+        oic_mock.assert();
     })
     .await;
 }

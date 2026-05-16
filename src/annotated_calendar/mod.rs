@@ -64,9 +64,10 @@ impl AnnotatedCalendar {
             .await
         });
 
-        // Block until both responses finish
-        let mut oic_calendar = oic_handle.await.map_err(Error::wrap)??;
-        let tm_venue_events = tm_handle.await.map_err(Error::wrap)??;
+        // Await both concurrently so a failing task doesn't detach the other
+        let (oic_result, tm_result) = tokio::join!(oic_handle, tm_handle);
+        let mut oic_calendar = oic_result.map_err(Error::wrap)??;
+        let tm_venue_events = tm_result.map_err(Error::wrap)??;
 
         // Get calendar timezone, or default to Pacific if not found
         let calendar_timezone: Tz = oic_calendar
@@ -169,13 +170,14 @@ impl AnnotatedCalendar {
         );
 
         let fox_events = client.get_tm(&url).await?;
+        let window_hours = i64::try_from(overlap_window_hours).map_err(Error::wrap)?;
 
         let mut venue_event_infos = Vec::new();
         for fe in &fox_events._embedded.events {
             if let Some(st) = fe.dates.start.date_time {
                 venue_event_infos.push(VenueEventInfo {
-                    lower_bound: st - Duration::hours(overlap_window_hours as i64),
-                    upper_bound: st + Duration::hours(overlap_window_hours as i64),
+                    lower_bound: st - Duration::hours(window_hours),
+                    upper_bound: st + Duration::hours(window_hours),
                     actual_start: st,
                     artist_name: fe.name.clone(),
                 });
