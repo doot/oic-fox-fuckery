@@ -13,25 +13,32 @@ default-run = "oic-fox-fuckery-cli"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace.dependencies]
-loco-rs = { version = "0.16", default-features = false }
+loco-rs = { version = "1.0", default-features = false }
+
+# loco-openapi 0.1.2 (latest published) still hard-pins `loco-rs = "0.16"`.
+# This shim satisfies that requirement while re-exporting the real loco-rs
+# 1.0 crate, so only one physical copy of loco-rs ends up in the build.
+# See patches/loco-rs-0.16-compat/src/lib.rs.
+[patch.crates-io]
+loco-rs = { path = "patches/loco-rs-0.16-compat" }
 
 [dependencies]
 loco-rs = { workspace = true , features = ["cli", "cache_inmem"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
-tokio = { version = "1.48", default-features = false, features = [
+tokio = { version = "1.53", default-features = false, features = [
   "rt-multi-thread",
 ] }
-async-trait = { version = "0.1.89" }
-axum = { version = "0.8.6" }
-tracing = { version = "0.1.41" }
+async-trait = { version = "0.1.92" }
+axum = { version = "0.8.9" }
+tracing = { version = "0.1.44" }
 # tracing-subscriber = { version = "0.3.20", features = ["env-filter", "json"] }
 # regex = { version = "1.12.2" }
-reqwest = { version = "0.12.24", features = ["json", "gzip", "brotli", "zstd", "deflate", "rustls-tls", "http2", "charset", "system-proxy"], default-features = false}
-icalendar = { version = "0.17.5", features = [ "chrono-tz", ] }
-chrono = "0.4.42"
+reqwest = { version = "0.13.4", features = ["json", "gzip", "brotli", "zstd", "deflate", "rustls", "http2", "charset", "system-proxy"], default-features = false}
+icalendar = { version = "0.17.13", features = [ "chrono-tz", ] }
+chrono = "0.4.45"
 chrono-tz = "0.10.4"
-utoipa = { version = "5.3.1", features = ["chrono"] }
+utoipa = { version = "5.5.0", features = ["chrono"] }
 loco-openapi = { version = "0.1", features = ["swagger", "redoc"] }
 
 [[bin]]
@@ -41,7 +48,7 @@ required-features = []
 
 [dev-dependencies]
 loco-rs = { workspace = true, features = ["testing"] }
-serial_test = { version = "3.2.0" }
+serial_test = { version = "4.0.1" }
 # rstest = { version = "0.26.1" }
 # insta = { version = "1.43", features = ["redactions", "yaml", "filters"] }
 mockito = "1.7"
@@ -59,6 +66,17 @@ codegen-backend = "cranelift"
 # Increase optimization level for dependencies in dev builds
 # This will reduce usefulness of debug info, so it may need to be disabled when more information is needed
 opt-level = 3
+
+[profile.dev.package.aws-lc-sys]
+# cranelift fails to propagate aws-lc-sys's native-link metadata to the final
+# link step, causing "undefined symbol" errors from mold. Force LLVM here.
+codegen-backend = "llvm"
+
+[profile.dev.package.aws-lc-rs]
+codegen-backend = "llvm"
+
+[profile.dev.package.rustls]
+codegen-backend = "llvm"
 
 [profile.dev-debugger]
 # Alternative dev profile that disables dev profile compile time optimizations for use in a debugger.
