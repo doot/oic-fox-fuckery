@@ -1,0 +1,11 @@
+[package]
+name = "loco-rs"
+version = "0.16.4"
+edition = "2021"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+loco-rs = { package = "loco-rs", version = "1.0", default-features = false }
