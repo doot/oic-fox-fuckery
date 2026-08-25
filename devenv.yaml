@@ -21,3 +21,12 @@ inputs:
     inputs:
       nixpkgs:
         follows: nixpkgs
+  shared-config:
+    url: github:doot/devenv-base
+    flake: false
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
+imports:
+- shared-config
+profile: rust
