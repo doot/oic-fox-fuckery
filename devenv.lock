@@ -75,11 +75,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1787699593,
-        "narHash": "sha256-5MQ9WLxuwzMe5a4Cgx1qFeOXVQyd/j7CuD0/xZ0zzI0=",
+        "lastModified": 1787701611,
+        "narHash": "sha256-rZHTKqjuPYc2DPy0BN+4mOZTBDA+du/745eOz59VuJw=",
         "owner": "doot",
         "repo": "devenv-base",
-        "rev": "25763c24ad4dc4a2161664e9c0c35693450c1ba6",
+        "rev": "4d79da126f656ba4df7ce486ca9bd46f35e7aae0",
         "type": "github"
       },
       "original": {
