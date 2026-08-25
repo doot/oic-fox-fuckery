@@ -35,56 +35,25 @@ in {
     prod_image_copy_registry = prod_image.copyToRegistry;
   };
 
-  cachix.pull = ["pre-commit-hooks"];
+  packages = lib.optionals config.container.isBuilding [
+    oic_fox_fuckery_cli # Project package
+  ];
 
-  devcontainer.enable = true;
-
-  delta.enable = true;
-
-  languages = {
-    nix.enable = !config.container.isBuilding && !config.devenv.isTesting;
-    nix.lsp.enable = true;
-    rust = {
-      enable = true;
-      lsp.enable = true;
-      toolchainFile = ./rust-toolchain.toml;
-      rustflags = "-Z threads=8";
-      mold.enable = true;
-    };
-  };
-
-  # Fucking gross...
-  claude = {
-    code = {
-      enable = true;
-      mcpServers = {
-        devenv = {
-          type = "stdio";
-          command = "devenv";
-          args = ["mcp"];
-          env = {
-            DEVENV_ROOT = config.devenv.root;
-          };
-        };
-      };
-    };
-  };
-
-  packages =
-    lib.optionals (!config.container.isBuilding && !config.devenv.isTesting) [
-      # Development packages to include only when not building a container or testing
-      pkgs.bacon
-      pkgs.atop
-      pkgs.loco
-      pkgs.statix
-      pkgs.deadnix
-      pkgs.nil
-      pkgs.jq # Needed for tasks and CLI script that use jq
-      pkgs.lldb
-    ]
-    ++ lib.optionals config.container.isBuilding [
-      oic_fox_fuckery_cli # Project package
-    ];
+  # packages =
+  #   lib.optionals (!config.container.isBuilding && !config.devenv.isTesting) [
+  #     # Development packages to include only when not building a container or testing
+  #     pkgs.bacon
+  #     pkgs.atop
+  #     pkgs.loco
+  #     pkgs.statix
+  #     pkgs.deadnix
+  #     pkgs.nil
+  #     pkgs.jq # Needed for tasks and CLI script that use jq
+  #     pkgs.lldb
+  #   ]
+  #   ++ lib.optionals config.container.isBuilding [
+  #     oic_fox_fuckery_cli # Project package
+  #   ];
 
   tasks = {
     "container:local" = {
@@ -158,53 +127,4 @@ in {
   scripts."${project_name}-cli".exec = ''
     "$(devenv build -q outputs.oic_fox_fuckery_cli | jq -r '.["outputs.oic_fox_fuckery_cli"]')/bin/${project_name}-cli" "$@"
   '';
-
-  enterTest = ''
-    rustc --version
-    echo "Running tests"
-    cargo fmt --check
-    cargo build
-    cargo clippy --all-targets --all-features
-    cargo test
-  '';
-
-  enterShell = ''
-    echo "Rust version: $(rustc --version)"
-    echo "Cargo version: $(cargo --version)"
-    echo "RUST_SRC_PATH: $RUST_SRC_PATH"
-  '';
-
-  git-hooks = {
-    hooks = {
-      commitizen.enable = !config.container.isBuilding;
-      deadnix.enable = !config.container.isBuilding;
-      statix.enable = !config.container.isBuilding;
-      alejandra.enable = !config.container.isBuilding;
-      markdownlint = {
-        enable = !config.container.isBuilding;
-        settings.configuration = {
-          MD013 = {
-            line_length = 180;
-          };
-        };
-      };
-      check-json.enable = !config.container.isBuilding;
-      pretty-format-json = {
-        enable = !config.container.isBuilding;
-        args = ["--no-sort-keys"];
-      };
-      cargo-check.enable = !config.container.isBuilding;
-      clippy = {
-        enable = true;
-        settings.allFeatures = true;
-        settings.denyWarnings = true;
-      };
-      rustfmt = {
-        enable = !config.container.isBuilding;
-        settings.config-path = ".rustfmt.toml";
-      };
-      check-toml.enable = !config.container.isBuilding;
-      check-yaml.enable = !config.container.isBuilding;
-    };
-  };
 }
