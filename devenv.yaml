@@ -1,16 +1,22 @@
 inputs:
+  devenv-base:
+    url: github:doot/devenv-base
+    flake: true
+  nixpkgs:
+    follows: devenv-base/nixpkgs
+  git-hooks:
+    follows: devenv-base/git-hooks
+
   crate2nix:
     url: github:nix-community/crate2nix
     inputs:
       nixpkgs:
         follows: nixpkgs
-  git-hooks:
-    url: github:cachix/git-hooks.nix
+  mk-shell-bin:
+    url: github:rrbutani/nix-mk-shell-bin
     inputs:
       nixpkgs:
         follows: nixpkgs
-  mk-shell-bin:
-    url: github:rrbutani/nix-mk-shell-bin
   nix2container:
     url: github:nlewo/nix2container
     inputs:
@@ -21,12 +27,6 @@ inputs:
     inputs:
       nixpkgs:
         follows: nixpkgs
-  shared-config:
-    url: github:doot/devenv-base
-    flake: false
-    inputs:
-      nixpkgs:
-        follows: nixpkgs
 imports:
-- shared-config
+- devenv-base
 profile: rust

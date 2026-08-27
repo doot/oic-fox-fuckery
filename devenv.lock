@@ -26,6 +26,29 @@
         "type": "github"
       }
     },
+    "claude-code-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "devenv-priv",
+          "devenv-base",
+          "nixpkgs"
+        ],
+        "systems": "systems"
+      },
+      "locked": {
+        "lastModified": 1787758847,
+        "narHash": "sha256-l4Py81+AIHHg9AFMYJowHnSOlC1l3qlgKkLLYw+oegM=",
+        "owner": "sadjow",
+        "repo": "claude-code-nix",
+        "rev": "4d4a291f122ae8a322d3e690e76d80a7141ca269",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sadjow",
+        "repo": "claude-code-nix",
+        "type": "github"
+      }
+    },
     "crate2nix": {
       "inputs": {
         "cachix": "cachix",
@@ -55,11 +78,11 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1787602541,
-        "narHash": "sha256-5j9Gvd2ulF6xiMALjwNl2JISzbjZAI+otYE2W+v4bgQ=",
+        "lastModified": 1787784483,
+        "narHash": "sha256-Y7I8zj6av4twRjUSOM8CJGfb5rCa0+iM3PU25nmhgUY=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "4352c84d4dfbf26e7ad221378addde7920fc485b",
+        "rev": "39f65f2c82d1551e3f468025b5c676dcca88aa08",
         "type": "github"
       },
       "original": {
@@ -69,17 +92,45 @@
         "type": "github"
       }
     },
-    "devenv-slop": {
-      "flake": false,
+    "devenv-base": {
+      "inputs": {
+        "git-hooks": "git-hooks_2",
+        "nixpkgs": "nixpkgs_2"
+      },
       "locked": {
-        "path": "../../../devenv-slop",
-        "type": "path"
+        "lastModified": 1787789035,
+        "narHash": "sha256-zxYdm95m44BlfW9E6tr7sj503En2Tt0QJqmDsRuzR24=",
+        "owner": "doot",
+        "repo": "devenv-base",
+        "rev": "97623214adf8c0fbae6667448800fa8bce40e98b",
+        "type": "github"
       },
       "original": {
-        "path": "../../../devenv-slop",
-        "type": "path"
+        "owner": "doot",
+        "repo": "devenv-base",
+        "type": "github"
+      }
+    },
+    "devenv-priv": {
+      "inputs": {
+        "claude-code-nix": "claude-code-nix",
+        "devenv-base": [
+          "devenv-base"
+        ]
       },
-      "parent": []
+      "locked": {
+        "lastModified": 1787789256,
+        "narHash": "sha256-bQ9aI4qRweVAUDRu1kmHlTteJM8TQ1Kzj+E8afk73p4=",
+        "ref": "refs/heads/main",
+        "rev": "8698793f2492afd92c3406f516301e89f61b3822",
+        "revCount": 5,
+        "type": "git",
+        "url": "ssh://git@github.com/doot/devenv-priv"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/doot/devenv-priv"
+      }
     },
     "devshell": {
       "inputs": {
@@ -185,6 +236,7 @@
       "inputs": {
         "flake-compat": "flake-compat_2",
         "nixpkgs": [
+          "devenv-base",
           "nixpkgs"
         ]
       },
@@ -317,11 +369,11 @@
     "nixpkgs-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1786858016,
-        "narHash": "sha256-Vczr2zxD0orq6N2QQe5uqOGF7TRDcQJRRuAcsdHr4kg=",
+        "lastModified": 1787394516,
+        "narHash": "sha256-pRGOQSClnXNI2iLUG6DYpsGvYcuw0drOutVZFTJNw90=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "54ba4bcec4043e72a4006d825e0d7aff5562008f",
+        "rev": "c8f90650c15282fa8656a041bfbbd2403997a9a7",
         "type": "github"
       },
       "original": {
@@ -336,11 +388,11 @@
         "nixpkgs-src": "nixpkgs-src"
       },
       "locked": {
-        "lastModified": 1787002832,
-        "narHash": "sha256-DGkHh88/7YLVGZ7HzSVN4YmUmR+wGKudIp6H9UsUNT0=",
+        "lastModified": 1787753358,
+        "narHash": "sha256-Tl77VbWyAKrOfRNQhL6JbQtb/MLzbYa/1RG1gWWfICk=",
         "owner": "cachix",
         "repo": "devenv-nixpkgs",
-        "rev": "ee3d58d53cfcddfc0ae6fc7f04f4fe2a0c7cf0ed",
+        "rev": "256551e45f6303e142ab4a98be1bf243feb77dc0",
         "type": "github"
       },
       "original": {
@@ -380,13 +432,19 @@
       "inputs": {
         "crate2nix": "crate2nix",
         "devenv": "devenv",
-        "devenv-slop": "devenv-slop",
-        "git-hooks": "git-hooks_2",
+        "devenv-base": "devenv-base",
+        "devenv-priv": "devenv-priv",
+        "git-hooks": [
+          "devenv-base",
+          "git-hooks"
+        ],
         "mk-shell-bin": "mk-shell-bin",
         "nix2container": "nix2container",
-        "nixpkgs": "nixpkgs_2",
-        "rust-overlay": "rust-overlay",
-        "shared-config": "shared-config"
+        "nixpkgs": [
+          "devenv-base",
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
       }
     },
     "rust-overlay": {
@@ -396,11 +454,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787627053,
-        "narHash": "sha256-QdVaU2WSCKsxZ0sBDIRnaaukp6Z5IMUE0gDEDoSRJd0=",
+        "lastModified": 1787713867,
+        "narHash": "sha256-ZRYTEvDb8QZLCHRoMyIZle9V3Bvw905m0teeo1RvI7M=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "132a10336af9ae819bdf640c0dd1c789b12d7107",
+        "rev": "494680f9ffa2b4bf9f2df0f442c7096e44adfa00",
         "type": "github"
       },
       "original": {
@@ -409,19 +467,18 @@
         "type": "github"
       }
     },
-    "shared-config": {
-      "flake": false,
+    "systems": {
       "locked": {
-        "lastModified": 1787634659,
-        "narHash": "sha256-RyYMixIBuhRTIxWDbi/c2OpMN9j4x6hEP+9jR6kd6Ys=",
-        "owner": "doot",
-        "repo": "devenv-base",
-        "rev": "672229c201e3f44ed55422429bba4351bfca3b0d",
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
         "type": "github"
       },
       "original": {
-        "owner": "doot",
-        "repo": "devenv-base",
+        "owner": "nix-systems",
+        "repo": "default",
         "type": "github"
       }
     }
