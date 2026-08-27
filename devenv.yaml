@@ -6,6 +6,7 @@ inputs:
     follows: devenv-base/nixpkgs
   git-hooks:
     follows: devenv-base/git-hooks
+
   crate2nix:
     url: github:nix-community/crate2nix
     inputs:
@@ -13,6 +14,9 @@ inputs:
         follows: nixpkgs
   mk-shell-bin:
     url: github:rrbutani/nix-mk-shell-bin
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
   nix2container:
     url: github:nlewo/nix2container
     inputs:
