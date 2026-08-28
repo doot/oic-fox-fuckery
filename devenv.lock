@@ -36,11 +36,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1787758847,
-        "narHash": "sha256-l4Py81+AIHHg9AFMYJowHnSOlC1l3qlgKkLLYw+oegM=",
+        "lastModified": 1787789419,
+        "narHash": "sha256-GjUH/k03ZGL6DpvEz34EbpTzIiIHHVEKWjNlOKU/0V4=",
         "owner": "sadjow",
         "repo": "claude-code-nix",
-        "rev": "4d4a291f122ae8a322d3e690e76d80a7141ca269",
+        "rev": "803370e6c9745a37a9e5aaaf8a3cf87ee03625cd",
         "type": "github"
       },
       "original": {
@@ -78,11 +78,11 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1787784483,
-        "narHash": "sha256-Y7I8zj6av4twRjUSOM8CJGfb5rCa0+iM3PU25nmhgUY=",
+        "lastModified": 1787874507,
+        "narHash": "sha256-bGZBsEWHdVx0DXy7ZhohunQ6xXNvJuytwbj/1wlsPY0=",
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "39f65f2c82d1551e3f468025b5c676dcca88aa08",
+        "rev": "a9cd5db5da8d678450322fd7288177dc1f17d4a2",
         "type": "github"
       },
       "original": {
@@ -98,11 +98,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1787789035,
-        "narHash": "sha256-zxYdm95m44BlfW9E6tr7sj503En2Tt0QJqmDsRuzR24=",
+        "lastModified": 1787797363,
+        "narHash": "sha256-YcnJbr8lenExafisuHxh/eYl7zdHqAMajKZQxOcoOFo=",
         "owner": "doot",
         "repo": "devenv-base",
-        "rev": "97623214adf8c0fbae6667448800fa8bce40e98b",
+        "rev": "a7324f4cd9a2911166c7a2e1358235b4e6218b82",
         "type": "github"
       },
       "original": {
@@ -119,11 +119,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787789256,
-        "narHash": "sha256-bQ9aI4qRweVAUDRu1kmHlTteJM8TQ1Kzj+E8afk73p4=",
+        "lastModified": 1787808593,
+        "narHash": "sha256-5vGcqSWg0RSKHkH63tA9s4kTomgNcc+tKnA7Q4yKl6A=",
         "ref": "refs/heads/main",
-        "rev": "8698793f2492afd92c3406f516301e89f61b3822",
-        "revCount": 5,
+        "rev": "8873ccf10d52d679436e3e9fa42fb905b43ea380",
+        "revCount": 10,
         "type": "git",
         "url": "ssh://git@github.com/doot/devenv-priv"
       },
@@ -454,11 +454,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1787713867,
-        "narHash": "sha256-ZRYTEvDb8QZLCHRoMyIZle9V3Bvw905m0teeo1RvI7M=",
+        "lastModified": 1787834454,
+        "narHash": "sha256-jXSvqn04IOecJCvSvl8+g3PsbDVNP6qKs6dKUs/b16k=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "494680f9ffa2b4bf9f2df0f442c7096e44adfa00",
+        "rev": "dc2fd1acc537f3583744e1373597a5731ff7a6e3",
         "type": "github"
       },
       "original": {
