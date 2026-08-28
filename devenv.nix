@@ -27,7 +27,7 @@
     };
   };
 in {
-  name = project_name;
+  name = lib.mkForce project_name;
 
   outputs = {
     inherit oic_fox_fuckery_cli;
