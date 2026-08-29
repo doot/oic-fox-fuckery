@@ -6,7 +6,6 @@ inputs:
     follows: devenv-base/nixpkgs
   git-hooks:
     follows: devenv-base/git-hooks
-
   crate2nix:
     url: github:nix-community/crate2nix
     inputs:
@@ -28,5 +27,5 @@ inputs:
       nixpkgs:
         follows: nixpkgs
 imports:
-- devenv-base
+  - devenv-base
 profile: rust
