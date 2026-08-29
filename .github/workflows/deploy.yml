@@ -1,17 +1,11 @@
----
 name: Deploy (build, test, push container)
-
 permissions: read-all
-
 on:
   push:
-    branches: [ main ]
-
+    branches: [main]
   workflow_dispatch:
-
 env:
   CARGO_TERM_COLOR: always
-
 jobs:
   deploy:
     strategy:
@@ -24,25 +18,19 @@ jobs:
     steps:
       - name: Display disk space (before)
         run: df -h
-
       - name: Node cleanup
         run: |
           sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
           sudo docker image prune --all --force
           sudo docker builder prune --all --force
-
       - name: Display disk space (after)
         run: df -h
-
       - uses: actions/checkout@v7
-
       - uses: cachix/install-nix-action@v31
-
       - name: Display nix store space (before cache restore)
         run: du -hs /nix/*
-
       - name: Restore and save Nix store
-        uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569  # TODO: Switch to a numbered version after next release
+        uses: nix-community/cache-nix-action@7df957e333c1e5da7721f60227dbba6d06080569 # TODO: Switch to a numbered version after next release
         with:
           # restore and save a cache using this key
           primary-key: nix-${{ runner.os }}-${{ hashFiles('**/*.nix', '**/devenv.lock') }}-cargo-${{ hashFiles('**/Cargo.lock') }}
@@ -73,30 +61,22 @@ jobs:
             ~/.cargo/git/db
             ~/.cargo/registry
             target/
-
       - name: Display nix store space (after cache restore)
         run: du -hs /nix/*
-
       - uses: cachix/cachix-action@v17
         with:
           name: devenv
-
       - name: Install devenv.sh
         run: nix profile install nixpkgs#devenv
-
       - name: devenv test
         run: devenv test
-
       - name: Display nix store space (after devenv test)
         run: du -hs /nix/*
-
       - name: Display nix store space (after devenv build)
         run: du -hs /nix/*
-
       - name: Build container and push to docker registry
         run: devenv tasks run container:registry
         env:
           REGISTRY_API_KEY: ${{ secrets.REGISTRY_API_KEY }}
-
       - name: Display nix store space (after container build)
         run: du -hs /nix/*

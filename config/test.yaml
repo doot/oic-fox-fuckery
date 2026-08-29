@@ -1,5 +1,4 @@
 # Loco configuration file documentation
-
 # Application logging configuration
 logger:
   # Enable or disable logging.
@@ -13,7 +12,6 @@ logger:
   # By default the logger has filtering only logs that came from your code or logs that came from `loco` framework. to see all third party libraries
   # Uncomment the line below to override to see all third party libraries you can enable this config and override the logger filters.
   # override_filter: trace
-
 # Web server configuration
 server:
   # Port on which the server will listen. the server binding is 0.0.0.0:{PORT}
@@ -29,14 +27,11 @@ server:
       timeout: 3000
     cors:
       enable: true
-
 fallback:
   enable: false
-
 cache:
   cache_in_mem_max_capacity: 33554432
   kind: "InMem"
-
 settings:
   tm_api_base: "http://localhost:4000"
   tm_api_key: "test_key"

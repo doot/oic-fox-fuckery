@@ -1,5 +1,4 @@
 # Loco configuration file documentation
-
 # Application logging configuration
 logger:
   # Enable or disable logging.
@@ -13,7 +12,6 @@ logger:
   # By default the logger has filtering only logs that came from your code or logs that came from `loco` framework. to see all third party libraries
   # Uncomment the line below to override to see all third party libraries you can enable this config and override the logger filters.
   # override_filter: trace
-
 # Web server configuration
 server:
   # Port on which the server will listen. the server binding is 0.0.0.0:{PORT}
@@ -31,22 +29,18 @@ server:
       timeout: 3000
     cors:
       enable: true
-
 fallback:
   enable: true
-
 cache:
   cache_in_mem_max_capacity: 33554432
   kind: "InMem"
-
 settings:
   tm_api_base: "https://app.ticketmaster.com"
   tm_api_key: "{{ get_env(name='TM_API_KEY') }}"
-  tm_venue_id: "{{ get_env(name='TM_VENUE_ID', default='KovZpaKoXe') }}"  # Venue ID, defaults to the fox
+  tm_venue_id: "{{ get_env(name='TM_VENUE_ID', default='KovZpaKoXe') }}" # Venue ID, defaults to the fox
   tm_page_size: 25
   oic_cal_base_url: "https://stats.sharksice.timetoscore.com/"
-  cache_duration: 600  # 10 minutes
-
+  cache_duration: 600 # 10 minutes
 initializers:
   openapi:
     scalar:
