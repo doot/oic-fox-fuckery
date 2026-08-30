@@ -100,7 +100,7 @@ impl Hooks for App {
             .tcp_nodelay(true)
             .tcp_keepalive(Duration::from_secs(60))
             .build()
-            .unwrap();
+            .map_err(|e| loco_rs::Error::string(&format!("failed to build HTTP client: {e}")))?;
 
         // Add a shared settings object that can be reused across requests
         let settings = common::settings::Settings::from_json(
