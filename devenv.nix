@@ -15,6 +15,7 @@
     inherit tag;
     config = {
       Cmd = ["start" "--environment" "production" "--binding" "0.0.0.0"];
+      Env = ["SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"];
       ExposedPorts = {
         "5150/tcp" = {};
       };
@@ -22,8 +23,8 @@
     };
     copyToRoot = pkgs.buildEnv {
       name = "image-root";
-      paths = [oic_fox_fuckery_cli ./. ./config];
-      pathsToLink = ["/bin" "/config"];
+      paths = [oic_fox_fuckery_cli pkgs.cacert ./. ./config];
+      pathsToLink = ["/bin" "/config" "/etc/ssl/certs"];
     };
   };
 in {
