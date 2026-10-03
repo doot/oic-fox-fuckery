@@ -13,7 +13,7 @@ default-run = "oic-fox-fuckery-cli"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace.dependencies]
-loco-rs = { version = "1.0", default-features = false }
+loco-rs = { version = "1.2.0", default-features = false }
 
 # loco-openapi 0.1.2 (latest published) still hard-pins `loco-rs = "0.16"`.
 # This shim satisfies that requirement while re-exporting the real loco-rs
@@ -38,7 +38,6 @@ reqwest = { version = "0.13.4", features = ["json", "gzip", "brotli", "zstd", "d
 icalendar = { version = "0.17.13", features = [ "chrono-tz", ] }
 chrono = "0.4.45"
 chrono-tz = "0.10.4"
-utoipa = { version = "5.5.0", features = ["chrono"] }
 loco-openapi = { version = "0.1", features = ["swagger", "redoc"] }
 
 [[bin]]
@@ -76,6 +75,11 @@ codegen-backend = "llvm"
 codegen-backend = "llvm"
 
 [profile.dev.package.rustls]
+codegen-backend = "llvm"
+
+[profile.test]
+# Cranelift skips unwind cleanup (Drop) on panic, leaking
+# serial_test/mutex guards and deadlocking remaining tests.
 codegen-backend = "llvm"
 
 [profile.dev-debugger]
